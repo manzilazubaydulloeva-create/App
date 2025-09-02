@@ -1,2 +1,2 @@
 # App
-This is app developer Amir
+Developer - Amir Aliyev

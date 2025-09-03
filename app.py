@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+st.write("Welcome to Amirchik site!")
 
 with st.sidebar:
     st.header("Enter data, please!")

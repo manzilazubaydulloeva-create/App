@@ -154,7 +154,4 @@ for entry in all_messages:
     else:
         st.markdown(f"*{entry['user']}* {entry['time']} | Message: {entry['message']}")
 
-with st.expander("Developer Data:"):
-    st.write("Amir Aliyev, live in Azerbaijan - Baku, 11 y.o")
-    st.info("Born in 2014, to become a billionaire!")
-    st.image("https://img-webcalypt.ru/img/thumb/lg/28692/20258/IWr2mmdZNIZBbR7qE34gYdXwsq72FafrH8Q7a0889AJK5ZUm9mFXXQixEhwDpZpb0RsOWXjUPdwQouUsc4RXzrYh30PsoddAHcL5o54RLlcvAI9Tx6uiQhaqaJgxbFdA.jpeg.jpg")
+
